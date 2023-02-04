@@ -16,7 +16,7 @@ class HashTable {
   count: number = 0;
   capacity: number;
   length: number;
-  data: KeyValuePair[];
+  data: Array<KeyValuePair | null>;
 
   constructor(numBuckets = 4) {
     this.capacity = numBuckets;
@@ -34,7 +34,7 @@ class HashTable {
 
   insertNoCollisions(key: string, value: any): void {
     const index = this.hashMod(key);
-    if (this.data[index] !== null) {
+    if (this.data[index] != null) {
       throw new Error("hash collision or same key/value pair already exists!");
     }
     this.data[index] = new KeyValuePair(key, value);
@@ -42,7 +42,11 @@ class HashTable {
   }
 
   insertWithHashCollisions(key: string, value: any): void {
-    // Your code here
+    const index = this.hashMod(key);
+    const pair = new KeyValuePair(key, value);
+    if (this.data[index] != null) pair.next = this.data[index]!;
+    this.data[index] = pair;
+    this.count++;
   }
 
   insert(key: string, value: any): void {
