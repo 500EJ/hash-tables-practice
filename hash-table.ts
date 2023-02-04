@@ -1,3 +1,5 @@
+import { sha256 } from "js-sha256";
+
 class KeyValuePair {
   key: string;
   value: any;
@@ -11,24 +13,23 @@ class KeyValuePair {
 }
 
 class HashTable {
-  count: number;
+  count: number = 0;
   capacity: number;
   length: number;
   data: KeyValuePair[];
 
   constructor(numBuckets = 4) {
-    this.count = 0;
     this.capacity = numBuckets;
     this.length = this.capacity;
-    this.data = new Array(this.length);
+    this.data = new Array(this.length).fill(null);
   }
 
-  hash(key) {
-    // Your code here
+  hash(key: string): number {
+    return parseInt(sha256(key).slice(0, 8), 16);
   }
 
-  hashMod(key) {
-    // Your code here
+  hashMod(key: string): number {
+    return this.hash(key) % this.capacity;
   }
 
   insertNoCollisions(key, value) {
